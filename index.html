@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:title" content="Sardor Zulfiqorov">
+<meta property="og:description" content="Matematika talabasi, dasturlashga qiziquvchi. Loyihalar, mashqlar va yozuvlar.">
+<meta property="og:type" content="website">
+<title>Sardor Zulfiqorov</title>
+<meta name="description" content="Sardor Zulfiqorov. Matematika talabasi, dasturlashga qiziquvchi.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<style>
+/* Layout: sticky header, hero with live sine waves, about + plotter, filterable work grid, contact form, 404 view via hash */
+:root {
+  --bg: #f5f7fa;
+  --surface: #ffffff;
+  --surface-2: #eaf0f4;
+  --fg: #0f1b24;
+  --muted: #55656f;
+  --line: #d5dfe6;
+  --teal: #0b8f7e;
+  --coral: #e5593a;
+  --ok: #12805c;
+  --bad: #c0392b;
+  --glow-a: rgba(11, 143, 126, .16);
+  --glow-b: rgba(229, 89, 58, .12);
+  --font-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Inter", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0c141b; --surface: #121e27; --surface-2: #192832; --fg: #e8f0f4; --muted: #92a5b0; --line: #243643;
+    --teal: #3ddbc3; --coral: #ff8f72; --ok: #4fd6a0; --bad: #ff8a7a;
+    --glow-a: rgba(61, 219, 195, .14); --glow-b: rgba(255, 143, 114, .10);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0c141b; --surface: #121e27; --surface-2: #192832; --fg: #e8f0f4; --muted: #92a5b0; --line: #243643;
+  --teal: #3ddbc3; --coral: #ff8f72; --ok: #4fd6a0; --bad: #ff8a7a;
+  --glow-a: rgba(61, 219, 195, .14); --glow-b: rgba(255, 143, 114, .10);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+body {
+  background: var(--bg); color: var(--fg);
+  font: 400 1rem/1.65 var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  z-index: 30; background: var(--bg);
+}
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.1; margin: 0; text-wrap: balance; letter-spacing: -.02em; }
+p { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; border-radius: 6px; }
+
+.wrap {
+  width: 100%; max-width: 72rem; margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.label {
+  font: 500 .75rem/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--teal);
+}
+
+/* Header */
+.site-header {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 3.75rem; }
+.brand { display: flex; align-items: center; gap: .6rem; text-decoration: none; font: 600 1.05rem var(--font-display); }
+.brand-mark {
+  width: 2rem; height: 2rem; border-radius: 50%; display: grid; place-items: center;
+  background: linear-gradient(135deg, var(--teal), var(--coral)); color: #fff; font: 700 1.05rem var(--font-display);
+}
+.nav { display: flex; align-items: center; gap: .25rem; }
+.nav a {
+  text-decoration: none; padding: .5rem .85rem; border-radius: 999px; color: var(--muted); font-weight: 500; font-size: .95rem;
+  transition: color .2s, background .2s;
+}
+.nav a:hover, .nav a.active { color: var(--fg); background: var(--surface-2); }
+.tools { display: flex; align-items: center; gap: .4rem; }
+.icon-btn {
+  width: 2.5rem; height: 2.5rem; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--fg);
+  display: grid; place-items: center; cursor: pointer; font-size: 1.05rem; line-height: 1;
+  transition: border-color .2s, transform .2s;
+}
+.icon-btn:hover { border-color: var(--teal); }
+.menu-btn { display: none; }
+.menu-btn .bars, .menu-btn .bars::before, .menu-btn .bars::after {
+  display: block; width: 1.05rem; height: 2px; background: currentColor; border-radius: 2px; content: ""; position: relative;
+  transition: transform .25s, background .25s;
+}
+.menu-btn .bars::before { position: absolute; top: -5px; }
+.menu-btn .bars::after { position: absolute; top: 5px; }
+.menu-btn[aria-expanded="true"] .bars { background: transparent; }
+.menu-btn[aria-expanded="true"] .bars::before { transform: translateY(5px) rotate(45deg); }
+.menu-btn[aria-expanded="true"] .bars::after { transform: translateY(-5px) rotate(-45deg); }
+
+@media (max-width: 719px) {
+  .menu-btn { display: grid; }
+  .nav {
+    position: absolute; left: 0; right: 0; top: 100%; flex-direction: column; align-items: stretch; gap: .15rem;
+    background: var(--bg); border-bottom: 1px solid var(--line);
+    padding: .5rem max(16px, env(safe-area-inset-right, 0px)) 1rem max(16px, env(safe-area-inset-left, 0px));
+    transform: translateY(-.5rem); opacity: 0; visibility: hidden; transition: transform .25s, opacity .25s, visibility .25s;
+  }
+  .nav.open { transform: none; opacity: 1; visibility: visible; }
+  .nav a { padding: .8rem .9rem; font-size: 1.05rem; border-radius: 12px; }
+}
+
+/* Hero */
+.hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
+.hero::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(60rem 28rem at 85% -10%, var(--glow-a), transparent 60%),
+    radial-gradient(48rem 26rem at 0% 110%, var(--glow-b), transparent 60%);
+}
+#waves { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+.hero-inner { position: relative; padding-block: clamp(3rem, 9vw, 6.5rem) clamp(3.5rem, 9vw, 6.5rem); display: grid; gap: 1.5rem; }
+.chip-eq {
+  justify-self: start; font: 500 .85rem var(--font-mono); padding: .4rem .8rem; border-radius: 999px;
+  border: 1px solid var(--line); background: color-mix(in srgb, var(--surface) 80%, transparent); color: var(--muted);
+}
+.hero h1 { font-size: clamp(2.4rem, 8.5vw, 5.2rem); font-weight: 700; max-width: 14ch; }
+.grad {
+  background: linear-gradient(100deg, var(--teal), var(--coral), var(--teal)); background-size: 200% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+  animation: slide 9s linear infinite;
+}
+@keyframes slide { to { background-position: -200% 0; } }
+.lead { font-size: clamp(1.05rem, 2.4vw, 1.3rem); color: var(--muted); max-width: 34rem; }
+.actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: .5rem; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 3rem; padding: .7rem 1.4rem;
+  border-radius: 999px; font: 600 .98rem var(--font-body); text-decoration: none; cursor: pointer; border: 1px solid transparent;
+  transition: transform .2s, box-shadow .2s, background .2s, border-color .2s;
+}
+.btn-primary { background: linear-gradient(120deg, var(--teal), var(--coral)); color: #fff; box-shadow: 0 8px 24px -10px var(--coral); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 28px -10px var(--coral); }
+.btn-ghost { background: var(--surface); color: var(--fg); border-color: var(--line); }
+.btn-ghost:hover { border-color: var(--teal); }
+.btn[disabled] { opacity: .65; cursor: progress; transform: none; }
+.hero-inner > * { animation: rise .7s cubic-bezier(.2, .7, .2, 1) both; }
+.hero-inner > *:nth-child(2) { animation-delay: .08s; }
+.hero-inner > *:nth-child(3) { animation-delay: .16s; }
+.hero-inner > *:nth-child(4) { animation-delay: .24s; }
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+/* Sections */
+section.block { padding-block: clamp(3.5rem, 8vw, 6rem); }
+section.block + section.block { border-top: 1px solid var(--line); }
+.sec-head { display: grid; gap: .6rem; margin-bottom: 2.25rem; }
+.sec-head h2 { font-size: clamp(1.9rem, 5vw, 2.8rem); }
+.sec-head p { color: var(--muted); max-width: 36rem; }
+
+.about { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(1.5rem, 5vw, 4rem); align-items: start; }
+.about-text { display: grid; gap: 1.1rem; font-size: 1.08rem; }
+.skills { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .5rem; }
+.skill { font: 500 .82rem var(--font-mono); padding: .4rem .75rem; border-radius: 8px; background: var(--surface-2); color: var(--fg); }
+.plot-card { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 1.1rem; display: grid; gap: .9rem; min-width: 0; }
+.plot-title { display: flex; justify-content: space-between; align-items: baseline; gap: .5rem; flex-wrap: wrap; }
+.plot-title strong { font: 600 1rem var(--font-display); }
+.plot-title code { font: 500 .9rem var(--font-mono); color: var(--teal); }
+#plot { width: 100%; height: auto; aspect-ratio: 16 / 10; display: block; border-radius: 12px; background: var(--surface-2); max-width: 100%; }
+.sliders { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.slider { display: grid; gap: .3rem; font: 500 .82rem var(--font-mono); color: var(--muted); }
+.slider input { width: 100%; accent-color: var(--teal); }
+@media (max-width: 859px) { .about { grid-template-columns: minmax(0, 1fr); } }
+
+/* Work */
+.filters { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.5rem; }
+.filter {
+  font: 500 .9rem var(--font-body); padding: .5rem 1rem; border-radius: 999px; border: 1px solid var(--line);
+  background: var(--surface); color: var(--muted); cursor: pointer; transition: all .2s;
+}
+.filter:hover { color: var(--fg); border-color: var(--teal); }
+.filter[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); gap: 1rem; }
+.card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 1.25rem; display: flex; flex-direction: column; gap: .8rem;
+  min-width: 0; transition: transform .25s, border-color .25s;
+}
+.card:hover { transform: translateY(-3px); border-color: var(--teal); }
+.card-top { display: flex; justify-content: space-between; align-items: center; gap: .5rem; }
+.kind { font: 500 .72rem var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--teal); }
+.badge { font: 500 .7rem var(--font-mono); padding: .2rem .5rem; border-radius: 6px; background: var(--surface-2); color: var(--muted); }
+.card h3 { font-size: 1.2rem; overflow-wrap: anywhere; }
+.card p { color: var(--muted); font-size: .95rem; }
+.card .more { color: var(--fg); font-size: .92rem; padding-top: .6rem; border-top: 1px dashed var(--line); }
+.card .more[hidden] { display: none; }
+.card-actions { margin-top: auto; padding-top: .3rem; }
+.link-btn {
+  background: none; border: 0; padding: .4rem 0; font: 600 .92rem var(--font-body); color: var(--teal); cursor: pointer;
+  display: inline-flex; gap: .4rem; align-items: center;
+}
+.link-btn:hover { text-decoration: underline; text-underline-offset: 4px; }
+.empty {
+  grid-column: 1 / -1; text-align: center; padding: 3rem 1rem; border: 1px dashed var(--line); border-radius: 18px; color: var(--muted);
+  display: grid; gap: .5rem; justify-items: center;
+}
+.empty strong { font: 600 1.15rem var(--font-display); color: var(--fg); }
+.empty .sym { font: 500 2rem var(--font-mono); color: var(--teal); }
+
+/* Contact */
+.contact { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(1.5rem, 5vw, 4rem); align-items: start; }
+.contact-note { display: grid; gap: .8rem; color: var(--muted); }
+form.form { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: clamp(1.1rem, 3vw, 1.75rem); display: grid; gap: 1.1rem; }
+.field { display: grid; gap: .4rem; min-width: 0; }
+.field label { font: 500 .88rem var(--font-body); }
+.field input, .field textarea {
+  width: 100%; font: 400 1rem var(--font-body); color: var(--fg); background: var(--bg); border: 1px solid var(--line);
+  border-radius: 12px; padding: .8rem .9rem; transition: border-color .2s, box-shadow .2s;
+}
+.field textarea { resize: vertical; min-height: 8rem; }
+.field input:focus, .field textarea:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px var(--glow-a); }
+.field.invalid input, .field.invalid textarea { border-color: var(--bad); }
+.err { color: var(--bad); font-size: .85rem; min-height: 1.1em; }
+.status { border-radius: 12px; padding: .9rem 1rem; font-size: .95rem; }
+.status.ok { background: color-mix(in srgb, var(--ok) 14%, transparent); color: var(--ok); }
+.status.bad { background: color-mix(in srgb, var(--bad) 14%, transparent); color: var(--bad); }
+
+/* 404 */
+#notfound { min-height: 70vh; display: grid; align-content: center; justify-items: start; gap: 1.2rem; padding-block: 5rem; }
+#notfound .big { font: 700 clamp(5rem, 22vw, 11rem)/.9 var(--font-display); }
+#notfound p { color: var(--muted); max-width: 30rem; font-size: 1.1rem; }
+
+footer { border-top: 1px solid var(--line); padding-block: 2rem; color: var(--muted); font-size: .9rem; }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem 1.5rem; }
+footer .mono { font-family: var(--font-mono); }
+
+@media (max-width: 859px) { .contact { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 420px) { .sliders { grid-template-columns: minmax(0, 1fr); } }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href="#" data-home><span class="brand-mark" aria-hidden="true">∑</span><span>Sardor Zulfiqorov</span></a>
+    <div class="tools">
+      <nav class="nav" id="nav" aria-label="Asosiy menyu">
+        <a href="#haqimda">Men haqimda</a>
+        <a href="#ishlar">Ishlarim</a>
+        <a href="#aloqa">Aloqa</a>
+      </nav>
+      <button class="icon-btn" id="theme" type="button" aria-label="Rejimni almashtirish">◐</button>
+      <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Menyuni ochish" aria-expanded="false" aria-controls="nav"><span class="bars"></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <div id="home">
+    <section class="hero">
+      <canvas id="waves" aria-hidden="true"></canvas>
+      <div class="wrap hero-inner">
+        <span class="chip-eq">e<sup>iπ</sup> + 1 = 0</span>
+        <h1>Salom, men <span class="grad">Sardor</span></h1>
+        <p class="lead">Matematika talabasi. Raqamlar va kod orasida qiziqarli narsalar qidiraman.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="#ishlar">Ishlarimni ko'rish →</a>
+          <a class="btn btn-ghost" href="#aloqa">Bog'lanish</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="haqimda">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="label">Men haqimda</span>
+          <h2>Isbotdan koddan</h2>
+        </div>
+        <div class="about">
+          <div class="about-text">
+            <p>Matematikani o'rganaman, dasturlashni sevaman. Ikkalasida ham bir narsa menga yoqadi: masalani kichik bo'laklarga bo'lib, aniq qadamlar bilan yechish.</p>
+            <p>Bu yerda o'zimga qiziq bo'lgan narsalarni joylayman: loyihalar, mashqlar va yangi o'rganganlarim.</p>
+            <div class="skills" aria-label="Qiziqishlarim">
+              <span class="skill">Matematika</span><span class="skill">Algebra</span><span class="skill">Sonlar nazariyasi</span>
+              <span class="skill">Python</span><span class="skill">JavaScript</span><span class="skill">Algoritmlar</span>
+            </div>
+          </div>
+          <div class="plot-card">
+            <div class="plot-title"><strong>O'ynab ko'ring</strong><code id="formula">y = 1.0 · sin(1.0 · x)</code></div>
+            <canvas id="plot" role="img" aria-label="Sinus funksiyasi grafigi, amplituda va chastota bilan o'zgaradi"></canvas>
+            <div class="sliders">
+              <label class="slider" for="amp"><span>Amplituda: <b id="ampv">1.0</b></span><input id="amp" type="range" min="0.2" max="1.5" step="0.1" value="1"></label>
+              <label class="slider" for="frq"><span>Chastota: <b id="frqv">1.0</b></span><input id="frq" type="range" min="0.5" max="4" step="0.5" value="1"></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="ishlar">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="label">Ishlarim</span>
+          <h2>Qiziqarli deb topganlarim</h2>
+          <p>Hozircha namunalar turibdi. Haqiqiy ishlarimni qo'shganim sari shu yerda almashtiraman.</p>
+        </div>
+        <div class="filters" role="group" aria-label="Turkum bo'yicha saralash" id="filters"></div>
+        <div class="grid" id="grid"></div>
+      </div>
+    </section>
+
+    <section class="block" id="aloqa">
+      <div class="wrap contact">
+        <div class="sec-head" style="margin-bottom:0">
+          <span class="label">Aloqa</span>
+          <h2>Yozing</h2>
+          <p>Savol, taklif yoki birga loyiha qilish fikri bo'lsa, shu yerga yozing. Odatda bir-ikki kun ichida javob beraman.</p>
+        </div>
+        <form class="form" id="form" novalidate>
+          <div class="field" id="f-name">
+            <label for="name">Ismingiz</label>
+            <input id="name" name="name" type="text" autocomplete="name" placeholder="Masalan, Aziza">
+            <span class="err" id="e-name" aria-live="polite"></span>
+          </div>
+          <div class="field" id="f-email">
+            <label for="email">Email manzilingiz</label>
+            <input id="email" name="email" type="email" autocomplete="email" placeholder="siz@pochta.uz" inputmode="email">
+            <span class="err" id="e-email" aria-live="polite"></span>
+          </div>
+          <div class="field" id="f-msg">
+            <label for="msg">Xabaringiz</label>
+            <textarea id="msg" name="msg" placeholder="Nima haqida yozmoqchisiz?"></textarea>
+            <span class="err" id="e-msg" aria-live="polite"></span>
+          </div>
+          <div id="status" role="status" aria-live="polite" hidden></div>
+          <button class="btn btn-primary" id="send" type="submit">Yuborish</button>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <div class="wrap" id="notfound" hidden>
+    <span class="label">Xato</span>
+    <div class="big grad">404</div>
+    <h2>Sahifa topilmadi</h2>
+    <p>Bu sahifa mavjud emas, yoki men uni hali yozmaganman.</p>
+    <a class="btn btn-primary" href="#" data-home>Bosh sahifaga qaytish</a>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="year">2026</span> Sardor Zulfiqorov</span>
+    <span class="mono">Q.E.D. ∎</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  /* Formspree havolasini shu yerga qo'ying, masalan: "https://formspree.io/f/abcdwxyz". Bo'sh qolsa forma faqat namuna ishlaydi. */
+  var FORM_ENDPOINT = "";
+  var root = document.documentElement;
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var $ = function (id) { return document.getElementById(id); };
+  function cssVar(name) { return getComputedStyle(root).getPropertyValue(name).trim(); }
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  /* Theme */
+  try { var saved = localStorage.getItem("sz-theme"); if (saved === "light" || saved === "dark") root.setAttribute("data-theme", saved); } catch (e) {}
+  $("theme").addEventListener("click", function () {
+    var current = root.getAttribute("data-theme");
+    if (!current) current = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    var next = current === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("sz-theme", next); } catch (e) {}
+    drawWaves(0); drawPlot();
+  });
+
+  /* Menu */
+  var nav = $("nav"), menuBtn = $("menuBtn");
+  function setMenu(open) {
+    nav.classList.toggle("open", open);
+    menuBtn.setAttribute("aria-expanded", String(open));
+    menuBtn.setAttribute("aria-label", open ? "Menyuni yopish" : "Menyuni ochish");
+  }
+  menuBtn.addEventListener("click", function () { setMenu(!nav.classList.contains("open")); });
+  nav.addEventListener("click", function (e) { if (e.target.closest("a")) setMenu(false); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") setMenu(false); });
+
+  /* Router: known anchors show the page, anything else shows 404 */
+  var known = { "": 1, "haqimda": 1, "ishlar": 1, "aloqa": 1 };
+  function route() {
+    var h = location.hash.replace("#", "");
+    var ok = !!known[h];
+    $("home").hidden = !ok;
+    $("notfound").hidden = ok;
+    if (ok && h) { var el = $(h); if (el) el.scrollIntoView(); }
+    if (!ok) window.scrollTo(0, 0);
+    var links = nav.querySelectorAll("a");
+    for (var i = 0; i < links.length; i++) links[i].classList.toggle("active", links[i].getAttribute("href") === "#" + h);
+    if (ok) { sizeCanvas(); drawWaves(0); drawPlot(); }
+  }
+  window.addEventListener("hashchange", route);
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest("[data-home]");
+    if (a) { e.preventDefault(); history.replaceState(null, "", location.pathname + location.search); route(); window.scrollTo(0, 0); }
+  });
+
+  /* Hero waves */
+  var wc = $("waves"), wctx = wc.getContext("2d"), W = 0, H = 0, dpr = 1, t0 = performance.now();
+  function sizeCanvas() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var r = wc.getBoundingClientRect(); if (!r.width) return;
+    W = r.width; H = r.height; wc.width = W * dpr; wc.height = H * dpr; wctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    pc.width = Math.max(1, Math.round(pc.clientWidth * dpr)); pc.height = Math.max(1, Math.round(pc.clientHeight * dpr));
+  }
+  function drawWaves(t) {
+    if (!W) return;
+    wctx.clearRect(0, 0, W, H);
+    var cols = [cssVar("--teal"), cssVar("--coral"), cssVar("--teal")];
+    var amps = [0.10, 0.07, 0.05], freqs = [1.4, 2.2, 3.1], speeds = [0.5, -0.35, 0.8], alphas = [0.55, 0.4, 0.25];
+    for (var k = 0; k < 3; k++) {
+      wctx.beginPath();
+      for (var x = 0; x <= W; x += 4) {
+        var y = H * 0.74 + Math.sin(x / W * Math.PI * 2 * freqs[k] + t * speeds[k] + k) * H * amps[k];
+        if (x === 0) wctx.moveTo(x, y); else wctx.lineTo(x, y);
+      }
+      wctx.strokeStyle = cols[k]; wctx.globalAlpha = alphas[k]; wctx.lineWidth = 1.6; wctx.stroke();
+    }
+    wctx.globalAlpha = 1;
+  }
+  function loop(now) { drawWaves((now - t0) / 1000); requestAnimationFrame(loop); }
+
+  /* Plotter: y = A sin(f x), x from -2π to 2π, ticks at multiples of π */
+  var pc = $("plot"), pctx = pc.getContext("2d");
+  function drawPlot() {
+    var w = pc.width, h = pc.height; if (!w) return;
+    var A = parseFloat($("amp").value), F = parseFloat($("frq").value);
+    $("ampv").textContent = A.toFixed(1); $("frqv").textContent = F.toFixed(1);
+    $("formula").textContent = "y = " + A.toFixed(1) + " · sin(" + F.toFixed(1) + " · x)";
+    pctx.setTransform(1, 0, 0, 1, 0, 0); pctx.clearRect(0, 0, w, h);
+    var padL = 12 * dpr, padR = 12 * dpr, padT = 14 * dpr, padB = 24 * dpr;
+    var xmin = -2 * Math.PI, xmax = 2 * Math.PI, ymin = -1.6, ymax = 1.6;
+    var sx = function (x) { return padL + (x - xmin) / (xmax - xmin) * (w - padL - padR); };
+    var sy = function (y) { return padT + (ymax - y) / (ymax - ymin) * (h - padT - padB); };
+    var line = cssVar("--line"), muted = cssVar("--muted"), teal = cssVar("--teal");
+    pctx.lineWidth = 1 * dpr; pctx.strokeStyle = line; pctx.fillStyle = muted;
+    pctx.font = (11 * dpr) + "px " + cssVar("--font-mono"); pctx.textAlign = "center";
+    var labels = { "-2": "-2π", "-1": "-π", "0": "0", "1": "π", "2": "2π" };
+    for (var n = -2; n <= 2; n++) {
+      var gx = sx(n * Math.PI);
+      pctx.beginPath(); pctx.moveTo(gx, padT); pctx.lineTo(gx, h - padB); pctx.stroke();
+      pctx.fillText(labels[String(n)], gx, h - 7 * dpr);
+    }
+    [-1, 1].forEach(function (v) { pctx.beginPath(); pctx.moveTo(padL, sy(v)); pctx.lineTo(w - padR, sy(v)); pctx.stroke(); });
+    pctx.strokeStyle = muted; pctx.beginPath(); pctx.moveTo(padL, sy(0)); pctx.lineTo(w - padR, sy(0)); pctx.stroke();
+    pctx.strokeStyle = teal; pctx.lineWidth = 2.4 * dpr; pctx.lineJoin = "round"; pctx.beginPath();
+    for (var px = 0; px <= 240; px++) {
+      var x = xmin + (xmax - xmin) * px / 240, y = A * Math.sin(F * x);
+      if (px === 0) pctx.moveTo(sx(x), sy(y)); else pctx.lineTo(sx(x), sy(y));
+    }
+    pctx.stroke();
+  }
+  $("amp").addEventListener("input", drawPlot);
+  $("frq").addEventListener("input", drawPlot);
+
+  /* Work */
+  var works = [
+    { kind: "Kod", title: "Tub sonlar qidiruvchisi", desc: "Eratosfen g'alviri bilan berilgan chegaragacha barcha tub sonlarni topadi.", more: "Algoritm n gacha bo'lgan sonlarni ketma-ket chizib chiqadi. Murakkabligi taxminan n log log n." },
+    { kind: "Matematika", title: "Modul arifmetikasi eslatmalari", desc: "Chegirmalar, taqqoslamalar va Ferma kichik teoremasi bo'yicha qisqa konspekt.", more: "Har bir teoremaga bitta misol va qisqa isbot qo'shilgan." },
+    { kind: "Kod", title: "Matritsa kalkulyatori", desc: "Matritsalarni qo'shish, ko'paytirish va determinantini hisoblaydi.", more: "JavaScript bilan yozilgan, natijalar jadvalda ko'rsatiladi." },
+    { kind: "Mashq", title: "Haftalik masalalar", desc: "Har hafta bitta qiziqarli masala va uning yechimi.", more: "Kombinatorika, sonlar nazariyasi va mantiq masalalaridan tanlangan." },
+    { kind: "Matematika", title: "Fibonachchi va oltin nisbat", desc: "Ketma-ketlik nisbati qanday qilib 1.618 ga yaqinlashishini ko'rsatadigan tahlil.", more: "Binet formulasi va grafik bilan birga." }
+  ];
+  var kinds = ["Hammasi", "Kod", "Matematika", "Mashq", "Maqola"];
+  var current = "Hammasi";
+  function renderFilters() {
+    var f = $("filters"); f.innerHTML = "";
+    kinds.forEach(function (k) {
+      var b = document.createElement("button"); b.type = "button"; b.className = "filter"; b.textContent = k;
+      b.setAttribute("aria-pressed", String(k === current));
+      b.addEventListener("click", function () { current = k; renderFilters(); renderGrid(); });
+      f.appendChild(b);
+    });
+  }
+  function renderGrid() {
+    var g = $("grid"); g.innerHTML = "";
+    var list = works.filter(function (w) { return current === "Hammasi" || w.kind === current; });
+    if (!list.length) {
+      var e = document.createElement("div"); e.className = "empty";
+      e.innerHTML = '<span class="sym" aria-hidden="true">∅</span><strong>Hozircha bo\'sh</strong><span>Bu turkumda hali ish yo\'q. Tez orada qo\'shaman, qaytib kiring.</span>';
+      g.appendChild(e); return;
+    }
+    list.forEach(function (w, i) {
+      var c = document.createElement("article"); c.className = "card";
+      var id = "more-" + i;
+      c.innerHTML = '<div class="card-top"><span class="kind"></span><span class="badge">Namuna</span></div><h3></h3><p class="d"></p><p class="more" hidden></p><div class="card-actions"><button type="button" class="link-btn" aria-expanded="false">Batafsil <span aria-hidden="true">→</span></button></div>';
+      c.querySelector(".kind").textContent = w.kind;
+      c.querySelector("h3").textContent = w.title;
+      c.querySelector(".d").textContent = w.desc;
+      var more = c.querySelector(".more"); more.textContent = w.more; more.id = id;
+      var btn = c.querySelector(".link-btn"); btn.setAttribute("aria-controls", id);
+      btn.addEventListener("click", function () {
+        var open = more.hidden; more.hidden = !open;
+        btn.setAttribute("aria-expanded", String(open));
+        btn.firstChild.nodeValue = open ? "Yopish " : "Batafsil ";
+      });
+      g.appendChild(c);
+    });
+  }
+
+  /* Form */
+  var form = $("form");
+  function setErr(field, msg) {
+    $("f-" + field).classList.toggle("invalid", !!msg);
+    $("e-" + field).textContent = msg || "";
+  }
+  function validate() {
+    var ok = true, n = $("name").value.trim(), em = $("email").value.trim(), m = $("msg").value.trim();
+    setErr("name", n ? "" : "Bu maydonni to'ldiring."); if (!n) ok = false;
+    if (!em) { setErr("email", "Bu maydonni to'ldiring."); ok = false; }
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) { setErr("email", "Email manzil noto'g'ri ko'rinyapti. Tekshirib ko'ring."); ok = false; }
+    else setErr("email", "");
+    setErr("msg", m ? "" : "Bu maydonni to'ldiring."); if (!m) ok = false;
+    return ok;
+  }
+  ["name", "email", "msg"].forEach(function (id) { $(id).addEventListener("input", function () { setErr(id, ""); }); });
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var st = $("status"); st.hidden = true;
+    if (!validate()) return;
+    var btn = $("send"); btn.disabled = true; btn.textContent = "Yuborilmoqda...";
+    var data = { name: $("name").value.trim(), email: $("email").value.trim(), message: $("msg").value.trim() };
+    function done(ok) {
+      btn.disabled = false; btn.textContent = "Yuborish";
+      st.hidden = false;
+      if (ok) {
+        st.className = "status ok";
+        st.textContent = "Rahmat! Xabaringiz yetib keldi, tez orada javob beraman.";
+        form.reset();
+      } else {
+        st.className = "status bad";
+        st.textContent = "Xabar yuborilmadi. Internetni tekshirib, qayta urinib ko'ring.";
+      }
+    }
+    if (!FORM_ENDPOINT) { setTimeout(function () { done(true); }, 900); return; }
+    fetch(FORM_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(data) })
+      .then(function (r) { done(r.ok); })
+      .catch(function () { done(false); });
+  });
+
+  renderFilters(); renderGrid();
+  window.addEventListener("resize", function () { sizeCanvas(); drawWaves((performance.now() - t0) / 1000); drawPlot(); });
+  route();
+  if (reduce) { drawWaves(0); } else { requestAnimationFrame(loop); }
+})();
+</script>
+
+</body>
+</html>
